@@ -4,6 +4,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.use((req,res,next) =>{
+    console.log(req.method);
+    console.log(req.path);
+    console.log(req.body);
+    console.log('-----');
+    next();
+})
+
 let idiomas = [
   {
       "id":1,
@@ -248,7 +256,7 @@ let idiomas = [
 }]
 
 app.get('/', (req, res) =>{
-    res.send('Hello world use --> /api/idiomas and /api/idiomas/id  (en,es,pt)');
+    res.send('<h1>Hello world</h1> <hr> Endpoints:  <ul><li><a href="http://localhost:3000/api/idiomas">/api/idiomas</a></li><li><a href="http://localhost:3000/api/idiomas/1">/api/idiomas/id (1,2,3)</a></li></ul>');
 })
 
 app.get('/api/idiomas', (request, response) => {
@@ -262,7 +270,9 @@ app.get('/api/idiomas/:id', (request, response) => {
   if (idioma) {
     response.json(idioma)
   } else {
-    response.status(404).end()
+    response.status(404).json({
+    error: `ID: ${id} Not found`
+  }).end();
   }
 })
 
